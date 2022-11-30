@@ -1,0 +1,77 @@
+import com.github.spotbugs.snom.SpotBugsTask
+
+plugins {
+  id 'java'
+  id 'java-test-fixtures'
+  id 'io.quarkus' version '2.14.2.Final'
+  id 'io.freefair.lombok' version '6.5.1'
+  id 'com.diffplug.spotless' version '6.12.0'
+  id 'com.github.spotbugs' version '5.0.13'
+}
+
+group 'com.waracle'
+version '1.0-SNAPSHOT'
+
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+  implementation enforcedPlatform('io.quarkus.platform:quarkus-bom:2.14.2.Final')
+  implementation 'io.quarkus:quarkus-config-yaml'
+  implementation 'io.quarkus:quarkus-resteasy-jackson'
+  implementation 'io.quarkus:quarkus-smallrye-openapi'
+  implementation 'io.quarkus:quarkus-hibernate-validator'
+  implementation 'io.quarkus:quarkus-hibernate-orm-panache'
+  implementation 'io.quarkus:quarkus-jdbc-h2'
+  implementation 'io.quarkus:quarkus-container-image-docker'
+
+  testImplementation 'io.quarkus:quarkus-junit5-mockito'
+  testImplementation 'org.mockito:mockito-junit-jupiter'
+  testImplementation 'io.rest-assured:rest-assured'
+  testImplementation 'org.assertj:assertj-core:3.23.1'
+  testImplementation 'com.tngtech.archunit:archunit-junit5:1.0.1'
+  testImplementation 'nl.jqno.equalsverifier:equalsverifier:3.11.1'
+
+  testFixturesImplementation 'org.hamcrest:hamcrest:2.1'
+  testFixturesImplementation 'org.skyscreamer:jsonassert:1.5.1'
+}
+
+java {
+  sourceCompatibility = JavaVersion.VERSION_17
+  targetCompatibility = JavaVersion.VERSION_17
+}
+
+compileJava {
+  options.encoding = 'UTF-8'
+  options.compilerArgs << '-parameters'
+}
+
+compileTestJava {
+  options.encoding = 'UTF-8'
+}
+
+test {
+  useJUnitPlatform()
+}
+
+spotless {
+  java {
+    importOrder()
+    removeUnusedImports()
+    googleJavaFormat()
+    endWithNewline()
+  }
+}
+
+spotbugs {
+  excludeFilter = file('spotbugs-exclude.xml')
+}
+
+tasks.withType(SpotBugsTask) {
+  reports {
+    html {
+      enabled = true
+    }
+  }
+}

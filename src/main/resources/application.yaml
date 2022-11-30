@@ -1,0 +1,26 @@
+quarkus:
+  # Disable the banner
+  banner:
+    enabled: false
+  # Package as native container image
+  package:
+    type: native
+  native:
+    container-build: true
+  container-image:
+    build: true
+    group: waracle
+  datasource:
+    db-kind: h2
+    jdbc:
+      url: jdbc:h2:mem:test
+  # Automatically create the DB schema
+  hibernate-orm:
+    database:
+      generation: drop-and-create
+
+"%test":
+  quarkus:
+    # Disable loading import.sql for tests
+    hibernate-orm:
+      sql-load-script: no-file
